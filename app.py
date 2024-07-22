@@ -67,6 +67,13 @@ def process_file(doc_content, model_name="gpt-4o"):
                 for t in temp_info:
                     sensitive_info.append(t.strip())
 
+    for comp in individual_entities["organizations"]:
+        for k in comp:
+            if (comp[k] is not None) and (comp[k] != ""):
+                temp_info = comp[k].split(",")
+                for t in temp_info:
+                    sensitive_info.append(t.strip())
+
     pattern = re.compile(r'\b(' + '|'.join(re.escape(word) for word in sensitive_info) + r')\b', re.IGNORECASE)
     cleaned_text = pattern.sub('##########', doc_content)
 
