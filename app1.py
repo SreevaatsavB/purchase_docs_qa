@@ -1,28 +1,26 @@
 import streamlit as st
-import openai
 import os
-import streamlit_scrollable_textbox as stx
 import time
-import streamlit as st
 import re
 import json
-from openai import OpenAI
 from utils import get_outputs_processed as get_text_from_pdf
+from groq import Groq
 
 
+# streamlit run app_v4.py --server.enableXsrfProtection false
 
-# Set your OpenAI API key here
-openai.api_key = st.secrets["GROQ_API_KEY"]
-os.environ["OPENAI_API_KEY"] = st.secrets["GROQ_API_KEY"]
+
 
 global messages
 messages = [
         {"role": "system", "content": "You are a chatbot that answers only based on the context provided and nothing else."},
 ]
 
-def process_file(doc_content, model_name="gpt-4o"):
+def process_file(doc_content, model_name="llama3-8b-8192"):
     
-    client = OpenAI()
+    client = Groq(
+        api_key=st.secrets["GROQ_API_KEY"],
+    )
     
     prompt = '''Here is a document, give me all the personal information of any individuals mentioned, such as name, contact number, email, address, etc. from the documents as strings in a JSON. 
 
@@ -66,14 +64,18 @@ def process_file(doc_content, model_name="gpt-4o"):
 
     return cleaned_text    
 
-def chat_with_openai(doc_content, question):
+def chat_with_llm(doc_content, question):
+
+    client = Groq(
+        api_key=st.secrets["GROQ_API_KEY"],
+    )
 
     if len(messages) == 1:
         messages.append({"role": "user", "content": f"Here is the document content :- {doc_content}\nAnswer the questions based on the context given only. Do not respond for any other question rather than ones about this document."})
 
     messages.append({"role": "user", "content": question})
     
-    response = openai.chat.completions.create(model="gpt-3.5-turbo", messages=messages, temperature=0)
+    response = client.chat.completions.create(model="llama3-8b-8192", messages=messages, temperature=0)
 
     messages.append({"role":"assistant", "content":response})
     # print(response.choices[0])
@@ -91,6 +93,10 @@ uploaded_file = st.file_uploader('Choose your pdf file', type="pdf")
 # st.write(uploaded_file)
 
 if uploaded_file:
+
+    messages = [
+        {"role": "system", "content": "You are a chatbot that answers only based on the context provided and nothing else."},
+    ]
 
     doc_name = uploaded_file.name
 
@@ -123,7 +129,7 @@ if uploaded_file:
                 # time.sleep(5)
 
                 
-                doc_content_clean = process_file(doc_content, model_name="gpt-4o")
+                doc_content_clean = process_file(doc_content, model_name="llama3-8b-8192")
                 st.success('PII erased from the doc')
 
                 st.session_state["docs"][doc_name][1] = [doc_content_clean]
@@ -141,7 +147,7 @@ if uploaded_file:
 
         if st.button("Get Answer", key="4"):
             if question:
-                answer = chat_with_openai(doc_content_clean, question)
+                answer = chat_with_llm(doc_content_clean, question)
                 st.write("**Question:**", question)
                 st.write("**Answer:**", answer)
             else:
@@ -175,7 +181,7 @@ if uploaded_file:
 
         if st.button("Get Answer", key="2"):
             if question:
-                answer = chat_with_openai(doc_content, question)
+                answer = chat_with_llm(doc_content, question)
                 st.write("**Question:**", question)
                 st.write("**Answer:**", answer)
             else:

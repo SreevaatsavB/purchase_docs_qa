@@ -2,3 +2,4 @@ groq
 streamlit
 pandas
 azure-ai-formrecognizer
+openai
