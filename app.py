@@ -51,15 +51,14 @@ def process_file(doc_content, model_name="gpt-4o"):
     individual_entities = json.loads(response.choices[0].message.content)
 
     sensitive_info = []
-    
+
     for key in individual_entities:
 
         for item in individual_entities[key]:
                 # sensitive_info += comp[k].split(",")
-                temp_info = item.split(",")
+                temp_info = item.split(" ")
 
                 for t in temp_info:
-                    
                     sensitive_info += [t.strip()]
 
     pattern = re.compile(r'\b(' + '|'.join(re.escape(word) for word in sensitive_info) + r')\b', re.IGNORECASE)
