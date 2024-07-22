@@ -29,26 +29,17 @@ def process_file(doc_content, model_name="gpt-4o"):
     The JSON Schema is as follows :- 
 
     {
-        "persons": [{
-            "name": .... ,
-            "contact_number": .... ,
-            "email": ..... , 
-            "address": ..... ,
-            "dob": .....
-        }, ....
-        ]
-
-        "organizations": [{
-            "contact_number": .... ,
-            "email": ..... , 
-            "address": ..... ,
-            "dob": .....
-        }, ....
-        ]
+        "names": [....],
+        "addresses": [....],
+        "contact_numbers": [....],
+        "dob": [....],
+        .
+        .
+        .
     }
 
     Give me ONLY the JSON output and nothing else
-    Document :- '''+ doc_content
+    Document :-'''+ doc_content
 
     response = client.chat.completions.create(
         model=model_name,
@@ -60,19 +51,16 @@ def process_file(doc_content, model_name="gpt-4o"):
     individual_entities = json.loads(response.choices[0].message.content)
 
     sensitive_info = []
-    for comp in individual_entities["persons"]:
-        for k in comp:
-            if (comp[k] is not None) and (comp[k] != ""):
-                temp_info = comp[k].split(",")
-                for t in temp_info:
-                    sensitive_info.append(t.strip())
+    
+    for key in individual_entities:
 
-    for comp in individual_entities["organizations"]:
-        for k in comp:
-            if (comp[k] is not None) and (comp[k] != ""):
-                temp_info = comp[k].split(",")
+        for item in individual_entities[key]:
+                # sensitive_info += comp[k].split(",")
+                temp_info = item.split(",")
+
                 for t in temp_info:
-                    sensitive_info.append(t.strip())
+                    
+                    sensitive_info += [t.strip()]
 
     pattern = re.compile(r'\b(' + '|'.join(re.escape(word) for word in sensitive_info) + r')\b', re.IGNORECASE)
     cleaned_text = pattern.sub('##########', doc_content)
