@@ -11,8 +11,8 @@ from utils import get_outputs_processed as get_text_from_pdf
 
 
 # Set your OpenAI API key here
-openai.api_key = st.secrets["GROQ_API_KEY"]
-os.environ["OPENAI_API_KEY"] = st.secrets["GROQ_API_KEY"]
+openai.api_key = st.secrets["OPENAI_API_KEY"]
+os.environ["OPENAI_API_KEY"] = st.secrets["OPENAI_API_KEY"]
 
 global messages
 messages = [
