@@ -6,13 +6,10 @@ import json
 from utils import get_outputs_processed as get_text_from_pdf
 from groq import Groq
 
-# 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
 
 # streamlit run app_v4.py --server.enableXsrfProtection false
 
 
-
-# Set your OpenAI API key here
 
 global messages
 messages = [
