@@ -26,8 +26,8 @@ def process_file(doc_content, model_name="gpt-4o"):
 
     Give me the exact string matches for each field. DONOT format them, give the text matches as it is. 
 
-    DONOT include the organization's name in the address
-    
+    DONOT include the organization's name in the address or in the names.
+
     The JSON Schema is as follows :- 
 
     {
