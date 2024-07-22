@@ -64,7 +64,7 @@ def process_file(doc_content, model_name="llama3-8b-8192"):
 
     return cleaned_text    
 
-def chat_with_openai(doc_content, question):
+def chat_with_llm(doc_content, question):
 
     client = Groq(
         api_key=st.secrets["GROQ_API_KEY"],
@@ -93,6 +93,10 @@ uploaded_file = st.file_uploader('Choose your pdf file', type="pdf")
 # st.write(uploaded_file)
 
 if uploaded_file:
+
+    messages = [
+        {"role": "system", "content": "You are a chatbot that answers only based on the context provided and nothing else."},
+    ]
 
     doc_name = uploaded_file.name
 
@@ -143,7 +147,7 @@ if uploaded_file:
 
         if st.button("Get Answer", key="4"):
             if question:
-                answer = chat_with_openai(doc_content_clean, question)
+                answer = chat_with_llm(doc_content_clean, question)
                 st.write("**Question:**", question)
                 st.write("**Answer:**", answer)
             else:
@@ -177,7 +181,7 @@ if uploaded_file:
 
         if st.button("Get Answer", key="2"):
             if question:
-                answer = chat_with_openai(doc_content, question)
+                answer = chat_with_llm(doc_content, question)
                 st.write("**Question:**", question)
                 st.write("**Answer:**", answer)
             else:
