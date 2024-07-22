@@ -22,7 +22,7 @@ def process_file(doc_content, model_name="gpt-4o"):
     
     client = OpenAI()
     
-    prompt = '''Here is a document, give me all the personal information of any individuals mentioned, such as name, contact number, email, address, etc. from the documents as strings in a JSON. 
+    prompt = '''Here is a document, give me all the personal information of any individuals or organizations/companies mentioned, such as name, contact number, email, address, etc. from the documents as strings in a JSON. 
 
     Give me the exact string matches for each field. DONOT format them, give the text matches as it is. 
 
@@ -37,10 +37,18 @@ def process_file(doc_content, model_name="gpt-4o"):
             "dob": .....
         }, ....
         ]
+
+        "organizations": [{
+            "contact_number": .... ,
+            "email": ..... , 
+            "address": ..... ,
+            "dob": .....
+        }, ....
+        ]
     }
 
     Give me ONLY the JSON output and nothing else
-    Document :- ''' + doc_content
+    Document :- '''+ doc_content
 
     response = client.chat.completions.create(
         model=model_name,
