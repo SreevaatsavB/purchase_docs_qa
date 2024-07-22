@@ -1,0 +1,5 @@
+groq
+streamlit
+pandas
+azure-ai-formrecognizer
+json
