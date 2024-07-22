@@ -16,7 +16,7 @@ messages = [
         {"role": "system", "content": "You are a chatbot that answers only based on the context provided and nothing else."},
 ]
 
-def process_file(doc_content, model_name="llama3-8b-8192"):
+def process_file(doc_content, model_name="mixtral-8x7b-32768"):
     
     client = Groq(
         api_key=st.secrets["GROQ_API_KEY"],
@@ -75,7 +75,7 @@ def chat_with_openai(doc_content, question):
 
     messages.append({"role": "user", "content": question})
     
-    response = client.chat.completions.create(model="llama3-8b-8192", messages=messages, temperature=0)
+    response = client.chat.completions.create(model="mixtral-8x7b-32768", messages=messages, temperature=0)
 
     messages.append({"role":"assistant", "content":response})
     # print(response.choices[0])
@@ -125,7 +125,7 @@ if uploaded_file:
                 # time.sleep(5)
 
                 
-                doc_content_clean = process_file(doc_content, model_name="llama3-8b-8192")
+                doc_content_clean = process_file(doc_content, model_name="mixtral-8x7b-32768")
                 st.success('PII erased from the doc')
 
                 st.session_state["docs"][doc_name][1] = [doc_content_clean]
