@@ -1,7 +1,6 @@
 import streamlit as st
 import openai
 import os
-import streamlit_scrollable_textbox as stx
 import time
 import streamlit as st
 import re
