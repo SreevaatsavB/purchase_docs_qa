@@ -125,7 +125,7 @@ if uploaded_file:
                 # time.sleep(5)
 
                 
-                doc_content_clean = process_file(doc_content, model_name="gpt-4o")
+                doc_content_clean = process_file(doc_content, model_name="llama3-8b-8192")
                 st.success('PII erased from the doc')
 
                 st.session_state["docs"][doc_name][1] = [doc_content_clean]
